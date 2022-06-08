@@ -8,8 +8,10 @@
 #include "utils.h"
 #include "adjustment.h"
 #include "resources.h"
+#include "commands.h"
 
 #include <girara/session.h>
+#include <girara/types.h>
 #include <girara/utils.h>
 #include <girara/settings.h>
 #include <girara/commands.h>
@@ -458,6 +460,25 @@ handle_execute_command(zathura_t* zathura, GVariant* parameters,
 }
 
 static void
+handle_search(zathura_t* zathura, GVariant* parameters,
+                       GDBusMethodInvocation* invocation)
+{
+  gchar* input = NULL;
+  g_variant_get(parameters, "(s)", &input);
+
+  girara_argument_t search_arg;
+  // forward.
+  search_arg.n = 1;
+  search_arg.data = NULL;
+
+  const bool ret = cmd_search(zathura->ui.session, input, &search_arg);
+  g_free(input);
+
+  GVariant* result = g_variant_new("(b)", ret);
+  g_dbus_method_invocation_return_value(invocation, result);
+}
+
+static void
 handle_method_call(GDBusConnection* UNUSED(connection),
                    const gchar* UNUSED(sender), const gchar* object_path,
                    const gchar* interface_name, const gchar* method_name,
@@ -479,6 +500,7 @@ handle_method_call(GDBusConnection* UNUSED(connection),
     { "OpenDocument", handle_open_document, false, true },
     { "CloseDocument", handle_close_document, false, false },
     { "GotoPage", handle_goto_page, true, true },
+    { "Search", handle_search, true, true },
     { "HighlightRects", handle_highlight_rects, true, true },
     { "SynctexView", handle_synctex_view, true, true },
     { "ExecuteCommand", handle_execute_command, false, false }
