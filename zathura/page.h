@@ -193,6 +193,16 @@ ZATHURA_PLUGIN_API cairo_surface_t* zathura_page_image_get_cairo(zathura_page_t*
 ZATHURA_PLUGIN_API char* zathura_page_get_text(zathura_page_t* page, zathura_rectangle_t rectangle, zathura_error_t* error);
 
 /**
+ * Get rectangles from selection
+ * @param page Page
+ * @param rectangle Selection
+ * @param error Set to an error value (see \ref zathura_error_t) if an error
+ * occurred
+ * @return List of rectangles or NULL if an error occurred
+ */
+ZATHURA_PLUGIN_API girara_list_t* zathura_page_get_selection(zathura_page_t* page, zathura_rectangle_t rectangle, zathura_error_t* error);
+
+/**
  * Render page
  *
  * @param page The page object
@@ -208,10 +218,20 @@ ZATHURA_PLUGIN_API zathura_error_t zathura_page_render(zathura_page_t* page, cai
  * is returned.
  *
  * @param page Page
- * @param error Set to an error value (see \ref zathura_Error_t) if an error
+ * @param error Set to an error value (see \ref zathura_error_t) if an error
  *    occurred.
  * @return Page label
  */
 ZATHURA_PLUGIN_API char* zathura_page_get_label(zathura_page_t* page, zathura_error_t* error);
+
+/**
+ * Get signatures of a page
+ *
+ * @param page Page
+ * @param error Set to an error value (see \ref zathura_error_t) if an error
+ *    occurred.
+ * @return List of signatures
+ */
+ZATHURA_PLUGIN_API girara_list_t* zathura_page_get_signatures(zathura_page_t* page, zathura_error_t* error);
 
 #endif // PAGE_H
